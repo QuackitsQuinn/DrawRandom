@@ -19,7 +19,7 @@ public class WindowController {
     @FXML
     private Button Draw;
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(WindowController.class);
+    private static final  logger;
 
     public WindowController() {
 
