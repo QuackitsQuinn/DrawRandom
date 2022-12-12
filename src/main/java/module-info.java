@@ -10,5 +10,4 @@ module com.quackiq.drawrandom {
 
     opens com.quackiq.drawrandom to javafx.fxml;
     exports com.quackiq.drawrandom;
-    opens com.quackiq.drawrandom.log4j2 to javafx.fxml;
 }

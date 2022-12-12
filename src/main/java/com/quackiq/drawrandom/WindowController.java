@@ -1,9 +1,12 @@
 package com.quackiq.drawrandom;
 
+import com.quackiq.drawrandom.Subcontrollers.LogObjectManager;
+import com.quackiq.drawrandom.logger.Logger;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.apache.logging.log4j.LogManager;
+
+import java.util.HashMap;
 
 public class WindowController {
     @FXML
@@ -18,10 +21,17 @@ public class WindowController {
     private ListView<String> OutputLog;
     @FXML
     private Button Draw;
+    private HashMap<String, Object> UiComponents = new HashMap<>();
 
-    private static final  logger;
+    private static final Logger logger = new Logger(WindowController.class.getName());
 
     public WindowController() {
+        UiComponents.put("LineCount", LineCount);
+        UiComponents.put("MaxLineSeg", MaxLineSeg);
+        UiComponents.put("ColorPalettes", ColorPalettes);
+        UiComponents.put("DrawProgress", DrawProgress);
+        UiComponents.put("OutputLog", OutputLog);
+        UiComponents.put("Draw", Draw);
 
     }
     public void ResetAll() {
@@ -38,8 +48,8 @@ public class WindowController {
         MaxLineSeg.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1));
     }
     public void InitLogWindow() {
-        logger.info("Initializing log window");
-        logger.warn("Things may break");
+       logger.info("Initializing log window");
+       new LogObjectManager(UiComponents);
 
     }
     @FXML

@@ -1,7 +1,9 @@
 package com.quackiq.drawrandom.logger;
 
+import static com.quackiq.drawrandom.Utils.getRandomInt;
+
 public class LoggerConstants {
-    public static enum Level {
+    public enum Level {
         TRACE,
         DEBUG,
         INFO,
@@ -9,6 +11,8 @@ public class LoggerConstants {
         ERROR,
         FATAL
     }
+    public static final RootLogger ROOT_LOGGER = new RootLogger(Level.INFO);
+    public static final int IDENTIFIER = getRandomInt(0, 1000000);
 
 
 }
