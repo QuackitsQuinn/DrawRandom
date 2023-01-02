@@ -1,10 +1,14 @@
 package com.quackiq.drawrandom;
 
-import com.quackiq.drawrandom.Subcontrollers.LogObjectManager;
+import com.quackiq.drawrandom.Subsystems.InputManager;
+import com.quackiq.drawrandom.Subsystems.LogManager;
+import com.quackiq.drawrandom.Subsystems.MainCanvas;
+import com.quackiq.drawrandom.Subsystems.SaveManager;
 import com.quackiq.drawrandom.logger.Logger;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
 
@@ -21,42 +25,71 @@ public class WindowController {
     private ListView<String> OutputLog;
     @FXML
     private Button Draw;
-    private HashMap<String, Object> UiComponents = new HashMap<>();
+    @FXML
+    private Canvas Canvas;
+    @FXML
+    private Pane DrawPane;
+    @FXML
+    private Button Save;
+    private final HashMap<String, Object> UiComponents = new HashMap<>();
+    private final HashMap<String, Object> Subsystems = new HashMap<>();
 
     private static final Logger logger = new Logger(WindowController.class.getName());
 
     public WindowController() {
+    }
+
+    public void InitLogWindow() {
+        logger.info("Initializing log window");
+        Subsystems.put("LogManager", new LogManager(UiComponents));
+
+    }
+
+    public void InitDrawCanvas() {
+        logger.info("Initializing draw canvas");
+        Subsystems.put("MainCanvas", new MainCanvas(UiComponents, Subsystems));
+    }
+
+    public void InitUiComponents() {
+        logger.info("Initializing UI components");
+        UiComponents.put("OutputLog", OutputLog);
+        UiComponents.put("DrawProgress", DrawProgress);
         UiComponents.put("LineCount", LineCount);
         UiComponents.put("MaxLineSeg", MaxLineSeg);
         UiComponents.put("ColorPalettes", ColorPalettes);
-        UiComponents.put("DrawProgress", DrawProgress);
-        UiComponents.put("OutputLog", OutputLog);
         UiComponents.put("Draw", Draw);
+        UiComponents.put("Canvas", Canvas);
+        UiComponents.put("DrawPane", DrawPane);
+        UiComponents.put("Save", Save);
+    }
 
+    public void InitInputs() {
+        Subsystems.put("InputManager", new InputManager(UiComponents));
     }
-    public void ResetAll() {
-        logger.info("Resetting all values");
-        ColorPalettes.setItems(FXCollections.observableArrayList(ColorPalette.getPalettes()));
-        ColorPalettes.setValue("default");
-        DrawProgress.setProgress(0);
-        OutputLog.getItems().clear();
 
+    public void InitSaveButton() {
+        logger.info("Initializing save button");
+        Subsystems.put("SaveManager", new SaveManager(UiComponents, Subsystems));
     }
-    public void InitSpinners() {
-        logger.info("Initializing spinners");
-        LineCount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1));
-        MaxLineSeg.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1));
-    }
-    public void InitLogWindow() {
-       logger.info("Initializing log window");
-       new LogObjectManager(UiComponents);
 
+    public void Save() {
+        ((SaveManager) Subsystems.get("SaveManager")).Save();
     }
+
     @FXML
     protected void initialize() {
-        InitSpinners();
+        InitUiComponents();
         InitLogWindow();
-        ResetAll();
+        InitInputs();
+        InitDrawCanvas();
+        InitSaveButton();
+
+    }
+
+    @FXML
+    public void Draw() {
+        logger.info("Drawing...");
+        ((MainCanvas) Subsystems.get("MainCanvas")).draw();
     }
 }
 

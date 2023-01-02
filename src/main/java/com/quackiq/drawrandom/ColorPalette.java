@@ -15,6 +15,7 @@ public class ColorPalette {
             HttpURLConnection connection = (HttpURLConnection) Constants.COLOR_PALETTE_LIST_URL.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            connection.setConnectTimeout(5000);
             connection.connect();
             return Utils.getResult(connection);
 
@@ -29,6 +30,7 @@ public class ColorPalette {
             Content data = Request.Post(Constants.COLOR_PALETTE_URL.toString())
                     .bodyString("{\"model\":\"" + model + "\"}", ContentType.APPLICATION_JSON)
                     .execute().returnContent();
+            System.out.println(data);
             JSONObject json = new JSONObject(data.toString());
             List<Object> colors = json.getJSONArray("result").toList();
             return Utils.getColors(colors);

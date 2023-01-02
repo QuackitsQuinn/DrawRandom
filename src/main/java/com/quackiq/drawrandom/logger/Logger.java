@@ -1,7 +1,7 @@
 package com.quackiq.drawrandom.logger;
 
 public class Logger {
-    private String name;
+    private final String name;
 
     public Logger(String name) {
     this.name = name;

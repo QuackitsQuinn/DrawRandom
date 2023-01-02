@@ -1,6 +1,8 @@
 package com.quackiq.drawrandom.logger;
 
 import com.quackiq.drawrandom.logger.LoggerConstants.Level;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.List;
 
@@ -11,16 +13,18 @@ import java.util.List;
 public class RootLogger {
     private Level level;
     private List<LogEntry> entries = new java.util.ArrayList<LogEntry>();
-    private List<String> formattedEntries = new java.util.ArrayList<String>();
+    private ObservableList<String> formattedEntries = FXCollections.observableArrayList();
     private LogLayout layout = new LogLayout();
     public RootLogger(Level level) {
         this.level = level;;
     }
     public void append(LogEntry entry) {
-        entries.add(entry);
-        String formatted = layout.format(entry);
-        formattedEntries.add(formatted);
-        System.out.println(formatted);
+        if (entry.getLevel().ordinal() >= level.ordinal()) {
+            entries.add(entry);
+            String formatted = layout.format(entry);
+            formattedEntries.add(formatted);
+            System.out.println(formatted);
+        }
     }
     public void setLevel(Level level) {
         this.level = level;
@@ -28,7 +32,7 @@ public class RootLogger {
     public List<LogEntry> getEntries() {
         return entries;
     }
-    public List<String> getEntriesAsString() {
+    public ObservableList<String> getEntriesAsString() {
         return formattedEntries;
     }
     public void setLayout(LogLayout layout) {
