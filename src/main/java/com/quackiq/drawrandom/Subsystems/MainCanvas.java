@@ -42,6 +42,9 @@ public class MainCanvas extends Subsystem {
         lineCount = inputManager.getLineCountSpinnerValue();
         maxLineSeg = inputManager.getSegmentSpinnerValue();
         LineWait = ((long) lineCount * maxLineSeg) / 100; // dumb way to get around floating point errors
+        if (LineWait == 0) {
+            LineWait = 1L;
+        }
         System.out.println("LineWait: " + LineWait);
 
     }
